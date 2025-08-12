@@ -1,0 +1,157 @@
+{
+  "info": {
+    "name": "Translation Service API",
+    "_postman_id": "a5a7f81f-3a36-4c16-a4f7-3c31a5203db8",
+    "description": "Postman collection for Laravel Translation Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"admin@test.com\",\n    \"password\": \"test123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/login",
+          "host": ["{{base_url}}"],
+          "path": ["api", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json.token) {",
+              "    pm.collectionVariables.set('token', json.token);",
+              "    console.log('Token saved to collection variable');",
+              "} else {",
+              "    console.warn('No token found in response');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Translation",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"key\": \"app.home.title\",\n    \"locale\": \"en\",\n    \"value\": \"Home\",\n    \"tags\": [\"web\", \"desktop\"],\n    \"context\": \"web\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/translations",
+          "host": ["{{base_url}}"],
+          "path": ["api", "translations"]
+        }
+      }
+    },
+    {
+      "name": "Update Translation",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"value\": \"Home Page Updated\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/translations/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "translations", "1"]
+        }
+      }
+    },
+    {
+      "name": "View Translation by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/translations/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "translations", "1"]
+        }
+      }
+    },
+    {
+      "name": "Search Translations",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/translations?locale=en&tag=web&key=home",
+          "host": ["{{base_url}}"],
+          "path": ["api", "translations"],
+          "query": [
+            { "key": "locale", "value": "en" },
+            { "key": "tag", "value": "web" },
+            { "key": "key", "value": "home" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Export Translations",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/export/en",
+          "host": ["{{base_url}}"],
+          "path": ["api", "export", "en"]
+        }
+      }
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/logout",
+          "host": ["{{base_url}}"],
+          "path": ["api", "logout"]
+        }
+      }
+    }
+  ]
+}
